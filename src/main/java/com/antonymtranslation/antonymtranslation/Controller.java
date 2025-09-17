@@ -2,17 +2,25 @@ package com.antonymtranslation.antonymtranslation;
 
 import javafx.animation.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import static com.sun.javafx.fxml.expression.Expression.multiply;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 public class Controller {
     @FXML
     private Text text;
     @FXML
     private TextField input_box;
+    @FXML
+    private Button copy_button;
+    @FXML
+    private Button run_button;
+
 
     @FXML
     private void initialize(){
@@ -37,13 +45,52 @@ public class Controller {
         input_box.setOnAction(_ -> {
             Translation(input_box.getText());
         });
+        run_button.setOnAction(_ -> {
+            Translation(input_box.getText());
+        });
+        copy_button.setOnAction(_ -> {
+            // 要复制的文本内容
+            String textToCopy = text.getText();
+
+            // 执行复制操作
+            boolean success = copyToClipboard(textToCopy);
+
+            if (success) {
+                System.out.println("文本已成功复制到剪贴板！");
+            } else {
+                System.out.println("复制到剪贴板失败！");
+            }
+        });
 
         show_animation.play();
     }
 
     /**
+     * 将文本复制到系统剪贴板
+     * @param text 要复制的文本
+     * @return 是否成功
+     */
+    public static boolean copyToClipboard(String text) {
+        try {
+            // 获取系统剪贴板
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+            // 创建StringSelection对象
+            StringSelection selection = new StringSelection(text);
+
+            // 设置剪贴板内容
+            clipboard.setContents(selection, null);
+
+            return true;
+        } catch (Exception e) {
+            System.err.println("复制到剪贴板时出错: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * 翻译文本
-     * @param text
+     * @param word
      */
     private void Translation(String word){
         StringBuilder builder = new StringBuilder();
@@ -97,6 +144,10 @@ public class Controller {
                 case '妹' : builder.append('姐');break;
                 case '站' : builder.append('坐');break;
                 case '坐' : builder.append('站');break;
+                case '真' : builder.append('假');break;
+                case '假' : builder.append('真');break;
+                case '老' : builder.append('新');break;
+                case '新' : builder.append('老');break;
 
                 default : builder.append(text_char);
             }

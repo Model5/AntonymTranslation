@@ -4,6 +4,7 @@ module com.antonymtranslation.antonymtranslation {
 
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
 
     opens com.antonymtranslation.antonymtranslation to javafx.fxml;
     exports com.antonymtranslation.antonymtranslation;
